@@ -1,7 +1,7 @@
 
 def sumof35(n):
 	"""
-	>>> sumof35(1000)
+	>>> sumof35(10)
 	23
 	"""
 	sum = 0
