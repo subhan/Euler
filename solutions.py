@@ -1,3 +1,5 @@
+import ipdb
+
 def sumof35(number):
     """
     >>> sumof35(10)
@@ -54,7 +56,7 @@ def is_prime(num):
     if num % 2 == 0:
         return False
     lowerlimit = 3
-    while lowerlimit < upperlimit:
+    while lowerlimit <= upperlimit:
         if num % lowerlimit == 0:
             return False
         lowerlimit += 2
@@ -63,15 +65,16 @@ def is_prime(num):
 
 def generate_primefactors(num, primes=None):
     primes = primes or []
-    facts = list(factors(num))
-    if len(facts) == 1:
-        primes.append(num)
-        return primes
-    for item in facts:
-        if is_prime(item):
-            primes.append(item)
-        else:
-            generate_primefactors(item, primes)
+    facts = sorted(factors(num))
+    items = facts[1:-1]    
+    if items: 
+        for item in items:
+            if is_prime(item):
+                primes.append(item)
+            else:
+                generate_primefactors(item, primes)
+    elif facts[0] not in primes:
+        primes.append(facts[0])
     return primes
 
 
@@ -100,12 +103,11 @@ def is_palindrome(num):
 
 def factors(num):
     upperlimit = int(num**0.5)
-    seq = set()
-    seq.add(1)
-    for i in range(2, upperlimit+1):
+    seq = [] 
+    for i in range(1, upperlimit+1):
         if num % i == 0:
-            seq.add(i)
-            seq.add(num/i)
+            seq.append(i)
+            seq.append(num/i)
     return seq
 
 def generate_palindrome(start, end):
@@ -136,12 +138,20 @@ def largest_palindrom_multiples_of_digits(digits):
     return large
 
 
-def update_count(data, values):
-    for val in values:
-        if val in data:
-            data[val] += 1
-        else:
-            data[val] = 1
+def continues_series_count(values):
+    filtered_values = set(values)
+    data = {}
+
+    for item in filtered_values:
+        for val in values:
+            if item == val:
+                if item in data:
+                    data[item] += data.get(item)
+                else:
+                    data[item] = 1
+            elif item in data:
+                del data[item] 
+    return data
 
 
 def smallest_multiple(start, end):
@@ -152,9 +162,46 @@ def smallest_multiple(start, end):
     primes = {}
     for i in range(start, end):
         update_count(primes, generate_primefactors(i) or [i])
-    import ipdb
     ipdb.set_trace()
 
+def sum_of_squares(seq):
+    return sum([i**2 for i in seq])
+
+def generate_prime():
+    i = 2
+    while True:
+        if is_prime(i):
+            yield i
+        i += 1
+
+def prime_index(index):
+    """
+    >>> prime_index(10001)
+    104743
+    >>> prime_index(6)
+    13
+    """
+    i = 1
+    prime_generator = generate_prime()
+    while True:
+        prime_numer = prime_generator.next()
+        if i == index:
+            return prime_numer
+        i += 1
+        
+def squares_of_sum(seq):
+    return sum(seq) ** 2
+
+
+def diff_between_sofsqs_sqsofs(seq):
+    """
+    >>> diff_between_sofsqs_sqsofs(range(1,11))
+    2640
+    >>> diff_between_sofsqs_sqsofs(range(1,101))
+    25164150
+    """
+    return squares_of_sum(seq) - sum_of_squares(seq)
+ 
 
 if __name__ == "__main__":
     import doctest
