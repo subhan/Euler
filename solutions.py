@@ -101,6 +101,7 @@ def is_palindrome(num):
     """
     return num == int(str(num)[::-1])
 
+
 def factors(num):
     upperlimit = int(num**0.5)
     seq = [] 
@@ -109,6 +110,7 @@ def factors(num):
             seq.append(i)
             seq.append(num/i)
     return seq
+
 
 def generate_palindrome(start, end):
     seq = []
@@ -164,8 +166,6 @@ def smallest_multiple(start, end):
         update_count(primes, generate_primefactors(i) or [i])
     ipdb.set_trace()
 
-def sum_of_squares(seq):
-    return sum([i**2 for i in seq])
 
 def generate_prime():
     i = 2
@@ -173,6 +173,7 @@ def generate_prime():
         if is_prime(i):
             yield i
         i += 1
+
 
 def prime_index(index):
     """
@@ -188,13 +189,20 @@ def prime_index(index):
         if i == index:
             return prime_numer
         i += 1
-        
+
+    
 def squares_of_sum(seq):
     return sum(seq) ** 2
 
 
+def sum_of_squares(seq):
+    return sum([i**2 for i in seq])
+
+
 def diff_between_sofsqs_sqsofs(seq):
     """
+    #sofsqs : sum of squares
+    #sqsofs : squares of sum
     >>> diff_between_sofsqs_sqsofs(range(1,11))
     2640
     >>> diff_between_sofsqs_sqsofs(range(1,101))
@@ -202,6 +210,23 @@ def diff_between_sofsqs_sqsofs(seq):
     """
     return squares_of_sum(seq) - sum_of_squares(seq)
  
+def greatest_product_of_consecutive_digit(numer, con_num = 5):
+    """
+    >>> greatest_product_of_consecutive_digit(7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450)
+    40824
+    """
+    string_num = str(numer)
+    end = len(string_num)
+    maximum = 0
+    for i in range(0, end):
+        series = string_num[i:i+con_num]
+        if len(series) < 5:
+            return maximum 
+        value = reduce(lambda x,y: x*y,
+            [int(element) for element in series])
+        #ipdb.set_trace()
+        if maximum < value:
+            maximum = value
 
 if __name__ == "__main__":
     import doctest
