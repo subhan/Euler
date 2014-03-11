@@ -104,11 +104,11 @@ def is_palindrome(num):
 
 def factors(num):
     upperlimit = int(num**0.5)
-    seq = [] 
+    seq = set()
     for i in range(1, upperlimit+1):
         if num % i == 0:
-            seq.append(i)
-            seq.append(num/i)
+            seq.add(i)
+            seq.add(num/i)
     return seq
 
 
