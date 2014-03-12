@@ -1,5 +1,6 @@
 import ipdb
 import json 
+import string
 import solutions 
 
 def is_pythagorean_triplet(a, b, c):
@@ -92,6 +93,70 @@ def max_triangle_divisors(limit):
         factors = solutions.factors(value)
         if len(factors)-1 >= limit:
             return value
+
+def get_collatz_seq(num, items=None):
+    """
+    >>> get_collatz_seq(13)
+    [13, 40, 20, 10, 5, 16, 8, 4, 2, 1]
+    """
+    items = items or []
+    items.append(num)
+    if num == 1:
+        return items
+    elif  num % 2 == 0:
+        return get_collatz_seq(num/2, items) 
+    else:
+        return get_collatz_seq((3*num)+1, items) 
+
+
+def longest_collatz_seq(limit):
+    """
+    >>> longest_collatz_seq(1000000)
+    837799
+    """
+    longest = 0
+    start = limit/2 
+    last = 0
+    while  start < limit:
+        length = len(get_collatz_seq(start))
+        if longest < length:
+            longest = length
+            last = start
+        start += 1
+    return last 
+
+
+def power_digit_sum(num, power):
+    """
+    >>> power_digit_sum(2, 15)
+    26
+    """    
+    result = num ** power
+    total = 0
+    while True:
+        total += result % 10
+        if result/10 == 0:
+            return total
+        result /= 10
+
+
+def names_scores():
+    i = 1
+    alpha_char = {}
+    for c in string.ascii_uppercase:
+        alpha_char[c] = i
+        i += 1 
+    data = open('names.txt').read()
+    names = sorted([i.strip().replace('"','') for i in data.split(',')])
+    name_indexs = dict(enumerate(names, 1))
+    names_score_map = {}
+    for index, name in name_indexs.iteritems():
+        total = 0
+        for c in name:
+            total += alpha_char[c]
+        names_score_map[name] = total * index
+
+    return names_score_map
 
 
 if __name__ == "__main__":
