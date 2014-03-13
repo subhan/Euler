@@ -158,6 +158,111 @@ def names_scores():
 
     return names_score_map
 
+dt = {
+    'One' : 3, 'Two' : 3, 'Three' : 5, 'Four' : 4, 'Five' : 4, 'Six' : 3, 'Seven' : 5, 'Eight' : 5, 'Nine' : 4, 'Ten' : 3,
+    'Eleven' : 6, 'Twelve' : 6, 'Thirteen' : 8, 'Fourteen' : 8, 'Fifteen' : 7, 'Sixteen' : 7, 'Seventeen' : 9, 'Eighteen' : 8,
+    'Nineteen' : 8, 'Twenty' : 6, 'Thirty' : 6, 'Forty' : 5, 'Fifty' : 5, 'Sixty' : 5, 'Seventy' : 7, 'Eighty' : 6,
+    'Ninety' : 6, 'Hundred' : 7, 'Thousand' : 8 
+}
+
+num_to_word = {
+    1:'One' , 2:'Two' , 3:'Three' , 4:'Four' , 5:'Five' , 6:'Six' , 7:'Seven' , 8:'Eight' , 9:'Nine' , 10:'Ten',
+    11:'Eleven', 12:'Twelve', 13:'Thirteen', 14:'Fourteen', 15:'Fifteen', 16:'Sixteen', 17:'Seventeen', 18:'Eighteen',
+    19:'Nineteen', 20:'Twenty', 30:'Thirty', 40:'Forty', 50:'Fifty', 60:'Sixty', 70:'Seventy', 80:'Eighty',
+    90:'Ninety', 100:'Hundred',  1000: 'Thousand'
+}
+
+def print_it(num_seq):
+
+    result = []
+    for num in num_seq:
+        if isinstance(num, type(())):
+            result.append(num_to_word[num[0]])
+            result.append(num_to_word[num[1]])
+        elif str(num).find('00') >= 1:
+            result.append('One '+num_to_word[num])
+        else:
+            result.append(num_to_word[num])
+    return result
+
+def num_to_words(num, items = None):
+    items = items or []
+    if num in num_to_word:
+        items.append(num) 
+        return items
+
+    digit = solutions.get_digits(num)
+    nth = 10**(digit-1)
+    div = num / nth
+    rem = num % nth
+    if div*nth in num_to_word:
+        items.append(div*nth)
+    else:
+        items.append((div, nth))
+
+    if rem in num_to_word:
+        items.append(rem)
+    elif rem >= 1:
+        num_to_words(rem, items)
+
+    return items
+
+
+def covert_into_words(num):
+    items = num_to_words(num)
+    return print_it(items)
+
+
+def count_it(seq):
+    total = 0
+    for item in seq:
+        if isinstance(item,type(())):
+            total += dt[num_to_word[item[0]]]
+            total += dt[num_to_word[item[1]]]
+        elif str(item).find('00') >= 1:
+            total += 3
+            total += dt[num_to_word[item]]
+        else:
+            total += dt[num_to_word[item]]
+    if len(seq) > 2:
+        total += 3
+    elif len(seq) == 2:
+        if isinstance(seq[0], type(())) or isinstance(seq[1], type(())):
+            total += 3
+        elif seq[0] >= 100:
+            total += 3
+    return total
+
+
+def number_letter_counts(num):
+    """
+    >>> number_letter_counts(1000)
+    21124
+    """
+    total = 0
+    for num in range(1, num+1):
+        total += count_it(num_to_words(num))
+    return total
+
+
+def factorial(num):
+    """
+    >>> factorial(10)
+    3628800
+    """
+    if num <= 1:
+        return 1
+    else:
+        return num * factorial(num-1)
+
+
+def factorial_digit_sum(n):
+    """
+    >>> factorial_digit_sum(10)
+    27
+    """
+    return sum([int(i) for i in str(factorial(n))])
+ 
 
 if __name__ == "__main__":
     import doctest
