@@ -19,7 +19,7 @@ def fib(number, cache=None):
     8
     """
     cache = cache or {}
-    if number == 1 or number == 2:
+    if number <= 1:
         return number
     elif  number in cache:
         return cache[number]
