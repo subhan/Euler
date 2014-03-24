@@ -112,6 +112,47 @@ def longest_recurring_decimal_fraction(limit):
         val = 1/float(index)
         print get_recurring_number(val)       
 
+
+def is_abundant_number(num):
+    factors = list(solutions.factors(num))
+    factors.remove(num)
+    return sum(factors) > num
+
+
+def abundant_generator(seed=None):
+    i = seed or 12
+    while True:
+        if is_abundant_number(i):
+            yield i
+        i += 1
+
+
+def is_sum_of_2abundant(num):
+    if num < 24:
+        return False
+    elif num == 24:
+        return True
+    abundant_gen = abundant_generator()
+    val = abundant_gen.next()
+    smallest_abundant = 12
+    while True:
+        remaining = num - val
+        if remaining == val or remaining == smallest_abundant:
+            return True
+        elif remaining < smallest_abundant:
+            return False 
+        elif is_abundant_number(remaining):
+            return True
+        val = abundant_gen.next()
+
+
+def non_abundant_sum(limit=28123):
+    """
+    >>> non_abundant_sum()
+    4179871
+    """
+    return sum([i for i in xrange(limit+1) if not is_sum_of_2abundant(i)])
+
  
 if __name__ == '__main__':
     import doctest
