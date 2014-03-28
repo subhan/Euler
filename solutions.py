@@ -99,7 +99,12 @@ def is_palindrome(num):
     >>> is_palindrome(121)
     True
     """
-    return num == int(str(num)[::-1])
+    if isinstance(num, type('')):
+        if num.startswith('0'):
+            ipdb.set_trace()
+        return num == num[::-1].lstrip('0')
+     
+    return num == int(str(num).lstrip('0')[::-1])
 
 
 def factors(num):
